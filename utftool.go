@@ -1,6 +1,6 @@
-// This is a quick little tool for playing with UTF8 strings, and for
-// studying incompatibilities between string libraries.  See
-// README.md.
+// This is a quick little tool for playing with valid and invalid UTF8
+// strings, and for studying incompatibilities between string
+// libraries.  See README.md.
 
 package main
 
@@ -10,9 +10,65 @@ import (
 	"fmt"
 	"strings"
 	//"time"
+	"unicode"
+	//"unicode/utf8"
 )
 
 var todiagram = flag.String("diagram", "", "Diagram a UTF8 string.");
+var torunes = flag.String("runes", "", "Runes of the string.");
+
+//! Prints the string runes.
+func runes(foo []byte) string{
+	for _, c := range string(foo) {
+		fmt.Printf("Rune %q (%04x):\n", c, c)
+		if unicode.IsControl(c) {
+			fmt.Println("\tis control rune")
+		}
+		if unicode.IsDigit(c) {
+			fmt.Println("\tis digit rune")
+		}
+		if unicode.IsGraphic(c) {
+			fmt.Println("\tis graphic rune")
+		}
+		if unicode.IsLetter(c) {
+			fmt.Println("\tis letter rune")
+		}
+		if unicode.IsLower(c) {
+			fmt.Println("\tis lower case rune")
+		}
+		if unicode.IsMark(c) {
+			fmt.Println("\tis mark rune")
+		}
+		if unicode.IsNumber(c) {
+			fmt.Println("\tis number rune")
+		}
+		if unicode.IsPrint(c) {
+			fmt.Println("\tis printable rune")
+		}
+		if !unicode.IsPrint(c) {
+			fmt.Println("\tis not printable rune")
+		}
+		if unicode.IsPunct(c) {
+			fmt.Println("\tis punct rune")
+		}
+		if unicode.IsSpace(c) {
+			fmt.Println("\tis space rune")
+		}
+		if unicode.IsSymbol(c) {
+			fmt.Println("\tis symbol rune")
+		}
+		if unicode.IsTitle(c) {
+			fmt.Println("\tis title case rune")
+		}
+		if unicode.IsUpper(c) {
+			fmt.Println("\tis upper case rune")
+		}
+		if c<0x80 {
+			fmt.Println("\tis an ASCII rune");
+		}
+	}
+	return "";
+}
 
 //! Diagrams a UTF8 string.
 func diagram(foo []byte) string{
@@ -42,13 +98,17 @@ func diagram(foo []byte) string{
 		slice[0],slice[1],slice[2],slice[3],slice[4],slice[5]);
 }
 
+//! Main method.
 func main() {
-	//Parses the command-line flags.
+	//Parses the command-line runes.
 	flag.Parse()
 
-	//Handle the flags here.
+	//Handle the runes here.
 	if(strings.Compare(*todiagram,"")!=0){
 		fmt.Println("Diagram:\n",diagram([]byte(*todiagram)));
+	}else if(strings.Compare(*torunes,"")!=0){
+		fmt.Println("Runes:")
+		runes([]byte(*torunes))
 	}else{
 		fmt.Println("Try --help.");
 	}

@@ -11,5 +11,6 @@ utftool: *.go
 
 run: utftool
 	./utftool -diagram écoutez!
+	./utftool -runes aəiő
 fmt:
 	go fmt
