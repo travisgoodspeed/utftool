@@ -14,11 +14,11 @@ import (
 	//"unicode/utf8"
 )
 
-var todiagram = flag.String("diagram", "", "Diagram a UTF8 string.");
-var torunes = flag.String("runes", "", "Runes of the string.");
+var todiagram = flag.String("diagram", "", "Diagram a UTF8 string.")
+var torunes = flag.String("runes", "", "Runes of the string.")
 
 //! Prints the string runes.
-func runes(foo []byte) string{
+func runes(foo []byte) string {
 	for _, c := range string(foo) {
 		fmt.Printf("Rune %q (%04x):\n", c, c)
 		if unicode.IsControl(c) {
@@ -63,39 +63,39 @@ func runes(foo []byte) string{
 		if unicode.IsUpper(c) {
 			fmt.Println("\tis upper case rune")
 		}
-		if c<0x80 {
-			fmt.Println("\tis an ASCII rune");
+		if c < 0x80 {
+			fmt.Println("\tis an ASCII rune")
 		}
 	}
-	return "";
+	return ""
 }
 
 //! Diagrams a UTF8 string.
-func diagram(foo []byte) string{
-	var slice [6]string;
+func diagram(foo []byte) string {
+	var slice [6]string
 
-	i:=0;      //input byte index.
-	row := 0;  //Row of the output string.
-	for i<len(foo){
-		if (foo[i]&0x80==0) || (foo[i]&0xC0==0xC0) {
+	i := 0   //input byte index.
+	row := 0 //Row of the output string.
+	for i < len(foo) {
+		if (foo[i]&0x80 == 0) || (foo[i]&0xC0 == 0xC0) {
 			//Reset the row on first-byte.
-			row=0;
-		}else{
+			row = 0
+		} else {
 			//Increment the row.
-			row++;
+			row++
 		}
 
 		//Draw the byte.
-		if row>0 {
-			for len(slice[row])<len(slice[0])-2{
-				slice[row]=slice[row]+" ";
+		if row > 0 {
+			for len(slice[row]) < len(slice[0])-2 {
+				slice[row] = slice[row] + " "
 			}
 		}
-		slice[row]=slice[row]+fmt.Sprintf("%02x ",foo[i]);
-		i++;
+		slice[row] = slice[row] + fmt.Sprintf("%02x ", foo[i])
+		i++
 	}
 	return fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%s\n",
-		slice[0],slice[1],slice[2],slice[3],slice[4],slice[5]);
+		slice[0], slice[1], slice[2], slice[3], slice[4], slice[5])
 }
 
 //! Main method.
@@ -104,12 +104,12 @@ func main() {
 	flag.Parse()
 
 	//Handle the runes here.
-	if(strings.Compare(*todiagram,"")!=0){
-		fmt.Println("Diagram:\n",diagram([]byte(*todiagram)));
-	}else if(strings.Compare(*torunes,"")!=0){
+	if strings.Compare(*todiagram, "") != 0 {
+		fmt.Println("Diagram:\n", diagram([]byte(*todiagram)))
+	} else if strings.Compare(*torunes, "") != 0 {
 		fmt.Println("Runes:")
 		runes([]byte(*torunes))
-	}else{
-		fmt.Println("Try --help.");
+	} else {
+		fmt.Println("Try --help.")
 	}
 }
