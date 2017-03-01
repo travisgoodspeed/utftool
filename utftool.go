@@ -12,6 +12,7 @@ import (
 	//"time"
 	"unicode"
 	//"unicode/utf8"
+	"strconv"
 )
 
 var todiagram = flag.String("diagram", "", "Diagram a UTF8 string.")
@@ -98,6 +99,23 @@ func diagram(foo []byte) string {
 		slice[0], slice[1], slice[2], slice[3], slice[4], slice[5])
 }
 
+//! Unquotes a potentially damaged string, but only if it's
+func unquote(foo string) string {
+	t, err := strconv.Unquote(foo)
+
+	if err != nil {
+		//fmt.Printf("Unquote(%#v): %v\n", foo, err);
+
+		// When there is a syntax error, that's probably
+		// because the string isn't quoted.  We'll use the
+		// literal parameter instead.
+		return foo
+	}
+
+	//Return the parsed string if we can parse it.
+	return t
+}
+
 //! Main method.
 func main() {
 	//Parses the command-line runes.
@@ -105,10 +123,10 @@ func main() {
 
 	//Handle the runes here.
 	if strings.Compare(*todiagram, "") != 0 {
-		fmt.Println("Diagram:\n", diagram([]byte(*todiagram)))
+		fmt.Println("Diagram:\n", diagram([]byte(unquote(*todiagram))))
 	} else if strings.Compare(*torunes, "") != 0 {
 		fmt.Println("Runes:")
-		runes([]byte(*torunes))
+		runes([]byte(unquote(*torunes)))
 	} else {
 		fmt.Println("Try --help.")
 	}
